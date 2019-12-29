@@ -25,6 +25,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Accent</string>
+			<key>footerText</key>
+			<string>You may need to respring</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -39,14 +41,6 @@
 			<string>Enabled</string>
 			<key>PostNotification</key>
 			<string>com.ivanc.preferenceschanged</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Color</string>
-			<key>footerText</key>
-			<string>You may need to respring</string>
 		</dict>
 		<dict>
             <key>cell</key>
@@ -93,10 +87,13 @@
 			<string>Respring</string>
 		</dict>
 		<dict>
-			<key>label</key>
-			<string>Links</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Links</string>
+			<key>footerText</key>
+			<string>Inspired by Chroma from Charlie Hewitt</string>
+
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -117,6 +114,18 @@
 			<string>Check the source code</string>
 			<key>url</key>
 			<string>https://github.com/ivancristina/accent</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>initials</key>
+    		<string>PP</string>
+			<key>label</key>
+			<string>Donation</string>
+			<key>subtitle</key>
+			<string>Wanna offer a ☕️?</string>
+			<key>url</key>
+			<string>https://paypal.me/IvanCristina</string>
 		</dict>
 	</array>
 	<key>title</key>

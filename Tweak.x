@@ -81,7 +81,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
     }
 }
 
-    +(id)systemGreenColor{
++(id)systemGreenColor{
     if(enabled )
       return newColor;
     else
@@ -241,6 +241,15 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
     }
 }
 
++(id) linkColor {
+    if (enabled) {
+        return newColor;
+    }
+    else {
+        return %orig;
+    }
+}
+
 +(id) twitterColorTwitterBlue {
     if (enabled) {
         return newColor;
@@ -257,7 +266,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 -(id)keyWindow {
     UIWindow* o = %orig;
     if (enabled  && ! isCurrentApp(@"com.apple.weather")) {
-        if (isCurrentApp(@"com.apple.camera") || isCurrentApp(@"com.apple.facetime") || isCurrentApp(@"com.apple.Passbook") || isCurrentApp(@"com.apple.compass")) {       //[o.tintColor isEqual:[UIColor systemTealColor]] || [o.tintColor isEqual:[UIColor systemYellowColor]])
+        if (isCurrentApp(@"com.apple.camera") || isCurrentApp(@"com.apple.facetime") || isCurrentApp(@"com.apple.Passbook") || isCurrentApp(@"com.apple.compass") || isCurrentApp(@"com.apple.mobilenotes")) {       //[o.tintColor isEqual:[UIColor systemTealColor]] || [o.tintColor isEqual:[UIColor systemYellowColor]])
             [o setTintColor:newColor];
         }
         else {
