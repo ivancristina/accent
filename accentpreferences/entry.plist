@@ -15,7 +15,7 @@
 		<key>isController</key>
 		<true/>
 		<key>label</key>
-		<string>AccentPreferences</string>
+		<string>Accent</string>
 	</dict>
 </dict>
 </plist>
