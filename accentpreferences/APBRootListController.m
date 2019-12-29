@@ -1,4 +1,5 @@
 #include "APBRootListController.h"
+#import <CepheiPrefs/HBAppearanceSettings.h>
 
 @implementation APBRootListController
 
@@ -10,4 +11,7 @@
 	return _specifiers;
 }
 
+-(void)respring {
+	[HBRespringController respring];
+}
 @end

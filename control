@@ -1,9 +1,9 @@
 Package: com.ivanc.accent
 Name: Accent
-Depends: mobilesubstrate
-Version: 0.0.1
+Depends: mobilesubstrate, ws.hbang.common (>= 1.14)
+Version: 1.0.0
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
-Maintainer: Ivan Cristina
-Author: Ivan Cristina
+Description: iOS accent colors in macOS style!
+Maintainer: Ivan Cristina <ivancristina5@gmail.com>
+Author: Ivan Cristina <ivancristina5@gmail.com>
 Section: Tweaks
