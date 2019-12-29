@@ -24,6 +24,48 @@
 			<key>PostNotification</key>
 			<string>com.ivanc.preferenceschanged</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Color</string>
+		</dict>
+		<dict>
+            <key>cell</key>
+            <string>PSLinkListCell</string>
+            <key>defaults</key>
+            <string>com.ivanc.accentpreferences</string>
+            <key>detail</key>
+            <string>PSListItemsController</string>
+            <key>key</key>
+            <string>isColor</string>
+            <key>label</key>
+            <string>Color</string>
+            <key>validTitles</key>
+            <array>
+				<string>Blue</string>
+				<string>Purple</string>
+				<string>Pink</string>
+				<string>Red</string>
+				<string>Orange</string>
+				<string>Yellow</string>
+				<string>Green</string>
+				<string>Gray</string>
+            </array>
+            <key>validValues</key>
+            <array>
+				<string>Blue</string>
+				<string>Purple</string>
+				<string>Pink</string>
+				<string>Red</string>
+				<string>Orange</string>
+				<string>Yellow</string>
+				<string>Green</string>
+				<string>Gray</string>
+            </array>
+			<key>PostNotification</key>
+			<string>com.ivanc.preferenceschanged</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string>Accent</string>
