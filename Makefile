@@ -6,3 +6,5 @@ Accent_FILES = Tweak.x
 Accent_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
+SUBPROJECTS += accentpreferences
+include $(THEOS_MAKE_PATH)/aggregate.mk

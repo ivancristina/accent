@@ -1,16 +1,33 @@
 #import "Headers.h"
 
 #define isCurrentApp(string) [[[NSBundle mainBundle] bundleIdentifier] isEqual : string]
+#define PreferencesFilePath [NSString stringWithFormat:@"/var/mobile/Library/Preferences/com.ivanc.accentpreferences.plist"]
+#define PreferencesChangedNotification "com.ivanc.preferenceschanged"
 
+static NSDictionary* preferences;
 static BOOL enabled;
 UIColor *newColor;
 
 void setColor() {
+    preferences = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.ivanc.accentpreferences"];
+
     newColor = [UIColor colorWithRed:1.00 green:0.47 blue:0.60 alpha:1.0];
+    
+    if ([preferences objectForKey:@"isEnabled"] != nil) {
+        enabled = [[preferences valueForKey:@"isEnabled"] boolValue];
+    }
+    else {
+        enabled = YES;
+    }
+}
+
+static void PreferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+    setColor();
 }
 
 %ctor
 {
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     setColor();
 }
 
