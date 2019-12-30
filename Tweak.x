@@ -259,6 +259,15 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
     }
 }
 
++(id) _systemBlueColor2 {
+    if (enabled) {
+        return newColor;
+    }
+    else {
+        return %orig;
+    }
+}
+
 %end
 
 %hook UIApplication
@@ -285,7 +294,9 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
     [self setOnTintColor:newColor];
 }
 -(void) setOnTintColor:(id)col {
-    %orig(newColor);
+    if (enabled) {
+        %orig(newColor);
+    }
 }
 
 %end
