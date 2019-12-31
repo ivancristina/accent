@@ -82,11 +82,13 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 }
 
 +(id)systemGreenColor{
-    if(enabled )
-      return newColor;
-    else
-      return %orig;
+    if (enabled) {
+        return newColor;
     }
+    else {
+        return %orig;
+    }
+}
 
 +(id) systemOrangeColor {
     if (enabled  && ! isCurrentApp(@"com.apple.mobilemail")) {
@@ -272,7 +274,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 
 %hook UIApplication
 
--(id)keyWindow {
+-(id) keyWindow {
     UIWindow* o = %orig;
     if (enabled  && ! isCurrentApp(@"com.apple.weather")) {
         if (isCurrentApp(@"com.apple.camera") || isCurrentApp(@"com.apple.facetime") || isCurrentApp(@"com.apple.Passbook") || isCurrentApp(@"com.apple.compass") || isCurrentApp(@"com.apple.mobilenotes")) {       //[o.tintColor isEqual:[UIColor systemTealColor]] || [o.tintColor isEqual:[UIColor systemYellowColor]])
@@ -289,7 +291,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 
 %hook UISwitch
 
--(void)layoutSubviews {
+-(void) layoutSubviews {
     %orig;
     [self setOnTintColor:newColor];
 }
@@ -305,7 +307,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 
 %hook GKColorPalette
 
-- (id)emphasizedTextColor {
+- (id) emphasizedTextColor {
     if (enabled) {
         return newColor;
     }
@@ -335,7 +337,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 
 %hook GKUITheme
 
-- (id)tabbarIconChallengesSelected : (BOOL)arg1 {
+- (id) tabbarIconChallengesSelected : (BOOL)arg1 {
     return [%orig imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
@@ -360,7 +362,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 //  iTunes
 
 %hook SUApplication
--(id)interactionTintColor {
+-(id) interactionTintColor {
     if (enabled) {
         return newColor;
     }
@@ -368,6 +370,32 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
         return %orig;
     }
 }
+%end
+
+//  NotesUI
+%hook UIColor
+
++(UIColor *) ICTintColor
+{
+    if (enabled && isCurrentApp(@"com.apple.mobilenotes")) {
+        return newColor;
+    } else {
+        return %orig;
+    }
+}
+
++ (id) ICTintedSelectionColor
+{
+    if (enabled && isCurrentApp(@"com.apple.mobilenotes")) {
+        CGFloat red, green, blue, alpha;
+        [newColor getRed:&red green:&green blue:&blue alpha:&alpha];
+        alpha = 0.3;
+        return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+    } else {
+        return %orig;
+    }
+}
+
 %end
 
 %ctor {

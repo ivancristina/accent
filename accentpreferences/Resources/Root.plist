@@ -90,7 +90,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Links</string>
+			<string>Developer</string>
 			<key>footerText</key>
 			<string>Inspired by Chroma from Charlie Hewitt</string>
 
