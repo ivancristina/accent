@@ -372,6 +372,21 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 }
 %end
 
+//  iMessage bubbles
+
+%hook CKGradientView
+-(id) colors {
+    if (enabled) {
+        return [[NSArray alloc] initWithObjects:
+                                        newColor,
+                                        newColor,nil];
+    }
+    else {
+        return %orig;
+    }
+}
+%end
+
 //  NotesUI
 %hook UIColor
 
@@ -395,6 +410,8 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
         return %orig;
     }
 }
+
+
 
 %end
 

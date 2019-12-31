@@ -26,7 +26,7 @@
 			<key>label</key>
 			<string>Accent</string>
 			<key>footerText</key>
-			<string>You may need to respring</string>
+			<string>A second respring may be needed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
