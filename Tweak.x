@@ -2,12 +2,15 @@
 
 #define isCurrentApp(string) [[[NSBundle mainBundle] bundleIdentifier] isEqual : string]
 #define PreferencesFilePath [NSString stringWithFormat:@"/var/mobile/Library/Preferences/com.ivanc.accentpreferences.plist"]
+#define ExcludedFilePath [NSString stringWithFormat:@"/var/mobile/Library/Preferences/com.ivanc.accentexcluded.plist"]
 #define PreferencesChangedNotification "com.ivanc.preferenceschanged"
 
 //Storing colors in a NSDictionary
 static NSDictionary *myColors;
 
 static NSDictionary* preferences;
+static NSDictionary* excludedApps;
+static NSMutableArray* excludedAppsArray;
 static BOOL enabled;
 NSString* color;
 UIColor *newColor;
@@ -17,6 +20,8 @@ void setColor() {
         Check iPhoneDevWiki to know more (https://iphonedevwiki.net/index.php/PreferenceBundles#Loading_Preferences) */
     // preferences = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.ivanc.accentpreferences"];
     preferences = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
+    excludedApps = [[NSDictionary alloc] initWithContentsOfFile:ExcludedFilePath];
+    excludedAppsArray = [NSMutableArray array];
 
     myColors = @{
         @"Teal" : [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:1.0],
@@ -46,6 +51,15 @@ void setColor() {
     else {
         enabled = YES;
     }
+
+    for (id key in excludedApps) {
+        if ([[excludedApps valueForKey:key] boolValue] == YES) {
+            [excludedAppsArray addObject:key];
+        }
+    }
+
+    [[%c(UIApplication) sharedApplication] keyWindow];
+
 }
 
 static void PreferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -403,23 +417,13 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
         return %orig;
     }
 }
-
-%end
-
-// Ignore labels in Files
-%hook UIImageView
-+(UIColor *) tintColor {
-    if (enabled && isCurrentApp(@"com.apple.DocumentsApp")) {
-        return %orig;
-    }
-}
-
 %end
 
 %ctor {
     // Causes weird artifacts, so commenting first line
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR("com.ivanc.accentpreferences"), NULL, CFNotificationSuspensionBehaviorCoalesce);
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     setColor();
-    %init;
+    if (! [excludedAppsArray containsObject:[[NSBundle mainBundle] bundleIdentifier]] && enabled) {
+        %init;
+    }
 }

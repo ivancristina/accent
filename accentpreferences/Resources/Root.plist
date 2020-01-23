@@ -81,6 +81,51 @@
 			<string>com.ivanc.preferenceschanged</string>
 		</dict>
 		<dict>
+			<key>bundle</key>
+			<string>AppList</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>isController</key>
+			<string>1</string>
+			<key>label</key>
+			<string>Excluded Apps</string>
+			<key>ALSettingsPath</key>
+			<string>/var/mobile/Library/Preferences/com.ivanc.accentexcluded.plist</string>
+			<key>ALSettingsKeyPrefix</key>
+			<string></string>
+			<key>ALChangeNotification</key>
+			<string>com.ivanc.preferenceschanged</string>
+			<key>ALAllowsSelection</key>
+			<string>1</string>
+			<key>ALSectionDescriptors</key>
+			<array>
+				<dict>
+					<key>title</key>
+					<string>System Applications</string>
+					<key>predicate</key>
+					<string>isSystemApplication = TRUE</string>
+					<key>cell-class-name</key>
+					<string>ALCheckCell</string>
+					<key>icon-size</key>
+					<string>29</string>
+					<key>suppress-hidden-apps</key>
+					<string>1</string>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>User Applications</string>
+					<key>predicate</key>
+					<string>isSystemApplication = FALSE</string>
+					<key>cell-class-name</key>
+					<string>ALCheckCell</string>
+					<key>icon-size</key>
+					<string>29</string>
+					<key>suppress-hidden-apps</key>
+					<string>1</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>action</key>
