@@ -55,6 +55,7 @@
             <string>Color</string>
             <key>validTitles</key>
             <array>
+				<string>Teal</string>
 				<string>Blue</string>
 				<string>Purple</string>
 				<string>Pink</string>
@@ -66,6 +67,7 @@
             </array>
             <key>validValues</key>
             <array>
+				<string>Teal</string>
 				<string>Blue</string>
 				<string>Purple</string>
 				<string>Pink</string>

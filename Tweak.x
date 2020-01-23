@@ -19,6 +19,7 @@ void setColor() {
     preferences = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
 
     myColors = @{
+        @"Teal" : [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:1.0],
         @"Blue" : [UIColor colorWithRed:0.00 green:0.48 blue:1.00 alpha:1.0],
         @"Purple" : [UIColor colorWithRed:0.69 green:0.32 blue:0.87 alpha:1.0],
         @"Pink" : [UIColor colorWithRed:1.00 green:0.47 blue:0.60 alpha:1.0],
@@ -26,7 +27,7 @@ void setColor() {
         @"Orange" : [UIColor colorWithRed:1.00 green:0.58 blue:0.00 alpha:1.0],
         @"Yellow" : [UIColor colorWithRed:1.00 green:0.80 blue:0.00 alpha:1.0],
         @"Green" : [UIColor colorWithRed:0.16 green:0.80 blue:0.25 alpha:1.0],
-        @"Gray" : [UIColor colorWithRed:0.56 green:0.56 blue:0.58 alpha:1.0],
+        @"Gray" : [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0],
     };
 
     color = [preferences valueForKey:@"isColor"];
@@ -49,14 +50,6 @@ void setColor() {
 
 static void PreferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
     setColor(); // Just need this in my case. Could add more later
-}
-
-%ctor
-{
-    // Causes weird artifacts, so commenting first line
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR("com.ivanc.accentpreferences"), NULL, CFNotificationSuspensionBehaviorCoalesce);
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-    setColor();
 }
 
 // iOS default colors
@@ -411,11 +404,22 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
     }
 }
 
+%end
 
+// Ignore labels in Files
+%hook UIImageView
++(UIColor *) tintColor {
+    if (enabled && isCurrentApp(@"com.apple.DocumentsApp")) {
+        return %orig;
+    }
+}
 
 %end
 
 %ctor {
+    // Causes weird artifacts, so commenting first line
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR("com.ivanc.accentpreferences"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     setColor();
     %init;
 }
