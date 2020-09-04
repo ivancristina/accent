@@ -13,6 +13,7 @@ static NSDictionary* excludedApps;
 static NSMutableArray* excludedAppsArray;
 static BOOL enabled;
 NSString* color;
+NSString* hexString;
 UIColor *newColor;
 
 void setColor() {
@@ -23,7 +24,17 @@ void setColor() {
     excludedApps = [[NSDictionary alloc] initWithContentsOfFile:ExcludedFilePath];
     excludedAppsArray = [NSMutableArray array];
 
+    hexString = [preferences objectForKey:@"rgbValue"];
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+
     myColors = @{
+        @"Picked" : [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+                green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
+                blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
+                alpha:1.0],
         @"Teal" : [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:1.0],
         @"Blue" : [UIColor colorWithRed:0.00 green:0.48 blue:1.00 alpha:1.0],
         @"Purple" : [UIColor colorWithRed:0.69 green:0.32 blue:0.87 alpha:1.0],
@@ -32,7 +43,7 @@ void setColor() {
         @"Orange" : [UIColor colorWithRed:1.00 green:0.58 blue:0.00 alpha:1.0],
         @"Yellow" : [UIColor colorWithRed:1.00 green:0.80 blue:0.00 alpha:1.0],
         @"Green" : [UIColor colorWithRed:0.16 green:0.80 blue:0.25 alpha:1.0],
-        @"Gray" : [UIColor colorWithRed:0.00 green:0.00 blue:0.00 alpha:1.0],
+        @"Gray" : [UIColor colorWithRed:0.56 green:0.56 blue:0.58 alpha:1.0],
     };
 
     color = [preferences valueForKey:@"isColor"];
@@ -44,12 +55,11 @@ void setColor() {
         newColor = [myColors objectForKey:@"Pink"];
     }
 
-
     if ([preferences objectForKey:@"isEnabled"] != nil) {
         enabled = [[preferences valueForKey:@"isEnabled"] boolValue];
     }
     else {
-        enabled = YES;
+        enabled = NO;
     }
 
     for (id key in excludedApps) {
