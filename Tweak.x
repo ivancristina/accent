@@ -14,7 +14,29 @@ static NSMutableArray* excludedAppsArray;
 static BOOL enabled;
 NSString* color;
 NSString* hexString;
+UIColor* defaultColor;
+;
 UIColor *newColor;
+
+void setDict() {
+    preferences = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
+
+    if (!preferences) {
+        enabled = NO;
+        [preferences setValue:[NSNumber numberWithBool:enabled] forKey:@"isEnabled"];
+        [preferences setValue:@"Pink" forKey:@"isColor"];
+	    [preferences setValue:@"#FF779A" forKey:@"rgbValue"];
+    }
+
+    if ([preferences objectForKey:@"isEnabled"] != nil) {
+        enabled = [[preferences valueForKey:@"isEnabled"] boolValue];
+    }
+    else {
+        enabled = NO;
+        [preferences setValue:[NSNumber numberWithBool:enabled] forKey:@"isEnabled"];
+    }
+
+}
 
 void setColor() {
     /*  Switching from NSUserdefaults to logging method because it doesn't work inside sandboxed application
@@ -23,7 +45,16 @@ void setColor() {
     preferences = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
     excludedApps = [[NSDictionary alloc] initWithContentsOfFile:ExcludedFilePath];
     excludedAppsArray = [NSMutableArray array];
+    NSMutableDictionary *prefsDict = [NSMutableDictionary dictionaryWithContentsOfFile:PreferencesFilePath];
+		if (!prefsDict) prefsDict = [NSMutableDictionary dictionary];
 
+    defaultColor = [UIColor colorWithRed:1.00 green:0.47 blue:0.60 alpha:1.0];
+
+    if ([preferences objectForKey:@"rgbValue"] == nil) {
+		[prefsDict setObject:@"#FF779A" forKey:@"rgbValue"];
+		[prefsDict writeToFile:PreferencesFilePath atomically:YES];
+        //[preferences setValue:@"#FF779A" forKey:@"rgbValue"];
+    }
     hexString = [preferences objectForKey:@"rgbValue"];
     unsigned rgbValue = 0;
     NSScanner *scanner = [NSScanner scannerWithString:hexString];
@@ -53,13 +84,8 @@ void setColor() {
     } else {
         //If its nil use whatever color from the dictionary
         newColor = [myColors objectForKey:@"Pink"];
-    }
-
-    if ([preferences objectForKey:@"isEnabled"] != nil) {
-        enabled = [[preferences valueForKey:@"isEnabled"] boolValue];
-    }
-    else {
-        enabled = NO;
+        [prefsDict setObject:newColor forKey:@"isColor"];
+		[prefsDict writeToFile:PreferencesFilePath atomically:YES];
     }
 
     for (id key in excludedApps) {
@@ -432,7 +458,9 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 %ctor {
     // Causes weird artifacts, so commenting first line
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-    setColor();
+    setDict();
+    preferences = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
+    if ([preferences objectForKey:@"isEnabled"]) setColor();
     if (! [excludedAppsArray containsObject:[[NSBundle mainBundle] bundleIdentifier]] && enabled) {
         %init;
     }

@@ -32,7 +32,7 @@
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
-			<true/>
+			<false/>
 			<key>defaults</key>
 			<string>com.ivanc.accentpreferences</string>
 			<key>key</key>
@@ -49,10 +49,14 @@
 			<string>pickColor</string>
 			<key>label</key>
 			<string>Pick Color</string>
+			<key>PostNotification</key>
+			<string>com.ivanc.preferenceschanged</string>
 		</dict>
 		<dict>
             <key>cell</key>
             <string>PSLinkListCell</string>
+			<key>default</key>
+			<string>Pink</string>
             <key>defaults</key>
             <string>com.ivanc.accentpreferences</string>
             <key>detail</key>
@@ -89,6 +93,14 @@
             </array>
 			<key>PostNotification</key>
 			<string>com.ivanc.preferenceschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>action</key>
+			<string>test</string>
+			<key>label</key>
+			<string>Current Hex</string>
 		</dict>
 		<dict>
 			<key>bundle</key>
@@ -134,14 +146,6 @@
 					<string>1</string>
 				</dict>
 			</array>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>action</key>
-			<string>test</string>
-			<key>label</key>
-			<string>Picked Hex</string>
 		</dict>
 		<dict>
 			<key>cell</key>
