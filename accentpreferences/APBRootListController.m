@@ -90,6 +90,7 @@ NSString* displayHex;
 				NSString *hexString = [UIColor hexFromColor:pickedColor];
 				[prefsDict setObject:hexString forKey:@"rgbValue"];
 				[prefsDict writeToFile:PreferencesFilePath atomically:YES];
+				// [preferences setValue:hexString forKey:@"rgbValue"];		// does not save, need to investigate
 			}];
 }
 

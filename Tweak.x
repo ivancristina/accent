@@ -15,8 +15,8 @@ static BOOL enabled;
 NSString* color;
 NSString* hexString;
 UIColor* defaultColor;
-;
-UIColor *newColor;
+UIColor* pickedColor;
+UIColor* newColor;
 
 void setDict() {
     preferences = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
@@ -30,8 +30,7 @@ void setDict() {
 
     if ([preferences objectForKey:@"isEnabled"] != nil) {
         enabled = [[preferences valueForKey:@"isEnabled"] boolValue];
-    }
-    else {
+    } else {
         enabled = NO;
         [preferences setValue:[NSNumber numberWithBool:enabled] forKey:@"isEnabled"];
     }
@@ -55,17 +54,21 @@ void setColor() {
 		[prefsDict writeToFile:PreferencesFilePath atomically:YES];
         //[preferences setValue:@"#FF779A" forKey:@"rgbValue"];
     }
-    hexString = [preferences objectForKey:@"rgbValue"];
-    unsigned rgbValue = 0;
-    NSScanner *scanner = [NSScanner scannerWithString:hexString];
-    [scanner setScanLocation:1]; // bypass '#' character
-    [scanner scanHexInt:&rgbValue];
+
+    if ([[preferences objectForKey:@"isColor"] isEqual:@"Picked"]) {
+		hexString = [preferences objectForKey:@"rgbValue"];
+        unsigned RGB;
+        NSScanner *scanner = [NSScanner scannerWithString:hexString];
+        [scanner setScanLocation:1]; // bypass '#' character
+        [scanner scanHexInt:&RGB];
+        pickedColor = [UIColor colorWithRed:((float)((RGB & 0xFF0000) >> 16))/255.0 \
+                    green:((float)((RGB & 0x00FF00) >>  8))/255.0 \
+                    blue:((float)((RGB & 0x0000FF) >>  0))/255.0 \
+                    alpha:1.0];
+    } else pickedColor = defaultColor;
 
     myColors = @{
-        @"Picked" : [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
-                green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
-                blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
-                alpha:1.0],
+        @"Picked" : pickedColor,
         @"Teal" : [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:1.0],
         @"Blue" : [UIColor colorWithRed:0.00 green:0.48 blue:1.00 alpha:1.0],
         @"Purple" : [UIColor colorWithRed:0.69 green:0.32 blue:0.87 alpha:1.0],
@@ -103,6 +106,7 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 }
 
 // iOS default colors
+%group Accent
 
 %hook UIColor
 
@@ -455,12 +459,17 @@ static void PreferencesChangedCallback(CFNotificationCenterRef center, void *obs
 }
 %end
 
+%end // end group Accent
+
 %ctor {
     // Causes weird artifacts, so commenting first line
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback) PreferencesChangedCallback, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     setDict();
     preferences = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
-    if ([preferences objectForKey:@"isEnabled"]) setColor();
+    if ([preferences objectForKey:@"isEnabled"]) {
+        setColor();
+        %init(Accent);
+    }
     if (! [excludedAppsArray containsObject:[[NSBundle mainBundle] bundleIdentifier]] && enabled) {
         %init;
     }
